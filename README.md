@@ -15,5 +15,4 @@ for device in deviceList:
     device.status()         # Returns the status (OFF, ECO, HGEL, CONFORT)
     device.confort()        # Sets the instruction to confort 
     device.stop()           # Sets to OFF
-
 ```
