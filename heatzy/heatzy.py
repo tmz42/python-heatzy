@@ -1,4 +1,5 @@
 import requests
+import argparse
 
 # Constantes
 heatzy_api_base_url = "https://euapi.gizwits.com/app"
@@ -21,7 +22,7 @@ modes_encode = {
         }
 }
 
-# Handler Heatzy : 'pont', s'autgentifie auprès du serveur Gizwits et récupère le token
+# Handler Heatzy : 'pont', s'authentifie auprès du serveur Gizwits et récupère le token
 class HeatzyHandler:
     def __init__(self,login,password):
         self.login = login
@@ -82,6 +83,7 @@ class HeatzyDevice:
         request_payload = modes_encode[self.version][mode]
         setModeRequest = requests.post(heatzy_api_base_url+'/control/'+self.did, json=request_payload, headers=request_headers)
 
+    # Méthodes de définition de modes plus lisibles
     def confort(self):
         self.setMode('CONFORT')
 
@@ -96,3 +98,28 @@ class HeatzyDevice:
 
     def on(self):
         self.setMode('CONFORT')
+
+def main():
+    parser = argparse.ArgumentParser(description='Controls Heatzy devices throught the CLI')
+    parser.add_argument('-u', '--username', help="Username on the Heatzy (Gizwits) platform")
+    parser.add_argument('-p', '--password', help="Password of the user")
+    parser.add_argument('-d', '--device', help="Name of the Heatzy device you wish to control")
+    parser.add_argument('-l', '--list', help="List all devices", action="count", default=0)
+    parser.add_argument('--setmode', help="Sets the mode of the device")
+
+    args = parser.parse_args()
+
+    # On liste les devices
+    if args.list:
+        hh = HeatzyHandler(args.username, args.password)
+        deviceList = hh.getHeatzyDevices()
+
+        for device in deviceList:
+            print(device)
+
+    # On définit le mode
+    if args.setmode:
+        pass
+
+if __name__ == "__main__":
+    main()
