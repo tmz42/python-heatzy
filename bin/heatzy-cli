@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+import heatzy
+import argparse
+import sys
+
+# Matrice de décodage des modes
+available_modes = ('OFF', 'ECO', 'HGEL', 'CONFORT')
+
+def main():
+    parser = argparse.ArgumentParser(description='Controls Heatzy devices throught the CLI')
+    parser.add_argument('-u', '--username', help="Username on the Heatzy (Gizwits) platform")
+    parser.add_argument('-p', '--password', help="Password of the user")
+    parser.add_argument('-d', '--device', help="Name of the Heatzy device you wish to control")
+    parser.add_argument('-l', '--list', help="List all devices", action="count", default=0)
+    parser.add_argument('-m', '--setmode', help="Sets the mode of the device")
+
+    args = parser.parse_args()
+
+    # On liste les devices
+    if args.list and args.username and args.password:
+        hh = heatzy.HeatzyHandler(args.username, args.password)
+        deviceList = hh.getHeatzyDevices()
+
+        for device_name in deviceList:
+            print(device_name+deviceList[device_name].__str__())
+
+    # On recherche un device
+    elif args.device and args.username and args.password:
+        hh = heatzy.HeatzyHandler(args.username, args.password)
+        deviceList = hh.getHeatzyDevices()
+
+        if args.device in deviceList:
+            if args.setmode:
+                if args.setmode in available_modes:
+                    deviceList[args.device].setMode(args.setmode)
+                else:
+                    print('Mode not found', file=sys.stderr)
+            print(deviceList[args.device].__str__())
+        else:
+            print('Device "'+args.device+'" not found', file=sys.stderr)
+
+    else:
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()
