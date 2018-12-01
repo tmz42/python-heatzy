@@ -12,9 +12,9 @@ def main():
     parser.add_argument('-u', '--username', help="Username on the Heatzy (Gizwits) platform")
     parser.add_argument('-p', '--password', help="Password of the user")
     parser.add_argument('-d', '--device', help="Name of the Heatzy device you wish to control")
-    parser.add_argument('-l', '--list', help="List all devices", action="count", default=0)
+    parser.add_argument('-l', '--list', help="List all devices", action="store_true", default=0)
     parser.add_argument('-m', '--setmode', help="Sets the mode of the device")
-    parser.add_argument('-b', '--binary', help="Binary mode : returns OFF for all modes except CONFORT")
+    parser.add_argument('-b', '--binary', help="Binary mode : returns OFF for all modes except CONFORT", action="store_true", default=0)
 
     args = parser.parse_args()
 
@@ -41,7 +41,7 @@ def main():
                     print('Mode not found', file=sys.stderr)
             # Mode binaire (Home Assistant)
             if args.binary:
-                if deviceList[args.device].is_on:
+                if deviceList[args.device].status() == 'CONFORT':
                     print('ON')
                 else:
                     print('OFF')
