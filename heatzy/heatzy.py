@@ -101,3 +101,6 @@ class HeatzyDevice:
 
     def on(self):
         self.setMode('CONFORT')
+
+    def is_on(self):
+        return (self.status() == 'CONFORT')
