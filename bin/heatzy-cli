@@ -2,6 +2,7 @@
 import heatzy.heatzy
 import argparse
 import sys
+import time
 
 # Matrice de décodage des modes
 available_modes = ('OFF', 'ECO', 'HGEL', 'CONFORT')
@@ -13,6 +14,7 @@ def main():
     parser.add_argument('-d', '--device', help="Name of the Heatzy device you wish to control")
     parser.add_argument('-l', '--list', help="List all devices", action="count", default=0)
     parser.add_argument('-m', '--setmode', help="Sets the mode of the device")
+    parser.add_argument('-b', '--binary', help="Binary mode : returns OFF for all modes except CONFORT")
 
     args = parser.parse_args()
 
@@ -30,12 +32,21 @@ def main():
         deviceList = hh.getHeatzyDevices()
 
         if args.device in deviceList:
+            # Si définition du mode : on exécute
             if args.setmode:
                 if args.setmode in available_modes:
                     deviceList[args.device].setMode(args.setmode)
+                    time.sleep(2)   # On attend 2 secondes (si on requête directement pas de mise à jour)
                 else:
                     print('Mode not found', file=sys.stderr)
-            print(deviceList[args.device].__str__())
+            # Mode binaire (Home Assistant)
+            if args.binary:
+                if deviceList[args.device].is_on:
+                    print('ON')
+                else:
+                    print('OFF')
+            else:
+                print(deviceList[args.device].__str__())
         else:
             print('Device "'+args.device+'" not found', file=sys.stderr)
 
