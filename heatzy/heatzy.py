@@ -1,23 +1,22 @@
 import requests
 
-# Constantes
-heatzy_api_base_url = "https://euapi.gizwits.com/app"
-heatzy_appID = "c70a66ff039d41b4a220e198b0fcc8b3"
-
 # Handler Heatzy : 'pont', s'authentifie auprès du serveur Gizwits et récupère le token
 class HeatzyHandler:
+    # Constantes
+    API_BASE_URL = "https://euapi.gizwits.com/app"
+    APPID = "c70a66ff039d41b4a220e198b0fcc8b3"
+
     def __init__(self,login,password):
         self.login = login
         self.password = password
         self.token = None
         self.get_token()
 
+    # Récupération du token
     def get_token(self):
-        
-
-        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': heatzy_appID}
+        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID}
         login_payload = {'username': self.login, 'password': self.password, 'lang': 'en'}
-        loginRequest = requests.post(heatzy_api_base_url+'/login', json=login_payload, headers=login_headers)
+        loginRequest = requests.post(HeatzyHandler.API_BASE_URL+'/login', json=login_payload, headers=login_headers)
 
         if 'token' in loginRequest.json():
             self.token = loginRequest.json()['token']
@@ -28,8 +27,8 @@ class HeatzyHandler:
 
     # Récupère les devices
     def getHeatzyDevices(self):
-        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': heatzy_appID, 'X-Gizwits-User-token' : self.token}
-        loginRequest = requests.get(heatzy_api_base_url+'/bindings', headers=login_headers)
+        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.token}
+        loginRequest = requests.get(HeatzyHandler.API_BASE_URL+'/bindings', headers=login_headers)
 
         request_devices_list = loginRequest.json()['devices']
         devices_dict = dict()
@@ -62,8 +61,8 @@ class HeatzyDevice:
             'Pilote2' : {'stop' : 'OFF', 'eco' : 'ECO', 'fro' : 'HGEL', 'cft' : 'CONFORT'},
             'Heatzy' : {'停止' : 'OFF', '经济' : 'ECO', '解冻' : 'HGEL', '舒适' : 'CONFORT'}
         }
-        request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': heatzy_appID}
-        statusRequest = requests.get(heatzy_api_base_url+'/devdata/'+self.did+'/latest', headers=request_headers)
+        request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID}
+        statusRequest = requests.get(HeatzyHandler.API_BASE_URL+'/devdata/'+self.did+'/latest', headers=request_headers)
 
         mode = statusRequest.json()['attr']['mode']
 
@@ -74,7 +73,9 @@ class HeatzyDevice:
     def setMode(self, mode):
         # Matrice d'encodage des modes
         modes_encode = {
+            # Modes pour Heatzy Pilote (Gen 1)
             'Heatzy' : {'OFF':{'raw':(1,1,3)},'ECO':{'raw':(1,1,1)},'HGEL':{'raw':(1,1,2)},'CONFORT':{'raw':(1,1,0)}},
+            # Modes pour Heatzy Pilote Gen 2
             'Pilote2' : {
                 'OFF':{'attrs': {'mode':'stop'}},
                 'ECO':{'attrs': {'mode':'eco'}},
@@ -82,9 +83,9 @@ class HeatzyDevice:
                 'CONFORT':{'attrs': {'mode':'cft'}}
                 }}
 
-        request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': heatzy_appID,'X-Gizwits-User-token': self.handler.token}
+        request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID,'X-Gizwits-User-token': self.handler.token}
         request_payload = modes_encode[self.version][mode]
-        setModeRequest = requests.post(heatzy_api_base_url+'/control/'+self.did, json=request_payload, headers=request_headers)
+        requests.post(HeatzyHandler.API_BASE_URL+'/control/'+self.did, json=request_payload, headers=request_headers)
 
     # Méthodes de définition de modes plus lisibles
     def confort(self):
