@@ -27,7 +27,7 @@ class HeatzyHandler:
 
     # Récupère les devices
     def getHeatzyDevices(self):
-        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.token}
+        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.get_token()}
         loginRequest = requests.get(HeatzyHandler.API_BASE_URL+'/bindings', headers=login_headers)
 
         request_devices_list = loginRequest.json()['devices']
@@ -83,7 +83,7 @@ class HeatzyDevice:
                 'CONFORT':{'attrs': {'mode':'cft'}}
                 }}
 
-        request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID,'X-Gizwits-User-token': self.handler.token}
+        request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID,'X-Gizwits-User-token': self.handler.get_token()}
         request_payload = modes_encode[self.version][mode]
         requests.post(HeatzyHandler.API_BASE_URL+'/control/'+self.did, json=request_payload, headers=request_headers)
 
