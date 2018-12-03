@@ -12,16 +12,16 @@ class HeatzyHandler:
         self.login = login          # Identificant
         self.password = password    # Mot de passe
         self.token = None           # Initialisation du token
-        self.token_expires = None   # TODO : expiration du token
+        self.token_expires = None   # Timestamp d'expiration du token
         self.get_token()            # Récupération du token
         self.devices = None         # Devices Heatzy
 
     # Récupération du token
     def get_token(self):
-        # Todo : return token si l'expiration est dans + de 24h : vérifier time.now?
-        if self.token and (self.token_expires + 3600) < time.time():
+        # Si le token existe déjà et expire dans plus de 24h : on ne recherche pas un nouveau token
+        if self.token and (self.token_expires + 86400) < time.time():
             return self.token
-
+        
         login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID}     # Préparation des headers
         login_payload = {'username': self.login, 'password': self.password, 'lang': 'en'}                   # Payload du login
         loginRequest = requests.post(HeatzyHandler.API_BASE_URL+'/login', json=login_payload, headers=login_headers)
@@ -29,7 +29,6 @@ class HeatzyHandler:
         loginJSON = loginRequest.json()
         # Si on récupère un token : OK
         if 'token' in loginJSON:
-            # TODO : ajouter champ d'expiration du token
             self.token = loginJSON['token']
             self.token_expires = loginJSON['expire_at']
             return self.token
@@ -38,7 +37,7 @@ class HeatzyHandler:
             raise Exception('Erreur de login : '+loginRequest.json())
 
     # Récupère les devices sous forme de 'Dict'
-    def getHeatzyDevices(self):     # Todo : ajouter un argument refresh (défaut : false)
+    def getHeatzyDevices(self):     # TODO : ajouter un argument refresh (défaut : false)
         # Si on n'a pas de devices, on fait la requête pour remplir les champs
         if not self.devices:
             login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.get_token()}
@@ -59,7 +58,7 @@ class HeatzyHandler:
         # Dans tous les cas, on envoie les devices
         return self.devices
 
-    # Todo : ajouter méthodes de lookup by name et lookup by DID
+    # TODO : ajouter méthodes de lookup by name et lookup by DID
 
     
 
