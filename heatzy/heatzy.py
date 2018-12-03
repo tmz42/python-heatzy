@@ -19,8 +19,8 @@ class HeatzyHandler:
     # Récupération du token
     def get_token(self):
         # Todo : return token si l'expiration est dans + de 24h : vérifier time.now?
-        #if self.token and self.token_expires < time.time:
-        #    return self.token:
+        if self.token and (self.token_expires + 3600) < time.time():
+            return self.token
 
         login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID}     # Préparation des headers
         login_payload = {'username': self.login, 'password': self.password, 'lang': 'en'}                   # Payload du login
