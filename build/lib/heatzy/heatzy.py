@@ -14,7 +14,6 @@ class HeatzyHandler:
         self.token = None           # Initialisation du token
         self.token_expires = None   # TODO : expiration du token
         self.get_token()            # Récupération du token
-        self.devices = None         # Devices Heatzy
 
     # Récupération du token
     def get_token(self):
@@ -37,31 +36,22 @@ class HeatzyHandler:
         else:
             raise Exception('Erreur de login : '+loginRequest.json())
 
-    # Récupère les devices sous forme de 'Dict'
-    def getHeatzyDevices(self):     # Todo : ajouter un argument refresh (défaut : false)
-        # Si on n'a pas de devices, on fait la requête pour remplir les champs
-        if not self.devices:
-            login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.get_token()}
-            loginRequest = requests.get(HeatzyHandler.API_BASE_URL+'/bindings', headers=login_headers)
+    # Récupère les devices
+    def getHeatzyDevices(self):
+        login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.get_token()}
+        loginRequest = requests.get(HeatzyHandler.API_BASE_URL+'/bindings', headers=login_headers)
 
-            # TODO : Check for errors 
+        # TODO : Check for errors 
 
-            request_devices_list = loginRequest.json()['devices']
-            # Initialisation du dictionnaire
-            devices_dict = dict()
+        request_devices_list = loginRequest.json()['devices']
+        devices_dict = dict()
 
-            # Infos à extraire : device alias, did, product_name
-            for device in request_devices_list:
-                dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
-                devices_dict[dev.name] = dev
+        # Infos à extraire : device alias, did, product_name
+        for device in request_devices_list:
+            dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
+            devices_dict[dev.name] = dev
 
-            self.devices = devices_dict         # Mise à jour des devices
-        # Dans tous les cas, on envoie les devices
-        return self.devices
-
-    # Todo : ajouter méthodes de lookup by name et lookup by DID
-
-    
+        return devices_dict
 
 # Classe HeatzyDevice
 class HeatzyDevice:

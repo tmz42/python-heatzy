@@ -5,6 +5,7 @@ import sys
 import time
 import paho.mqtt.client
 import threading
+import logging
 
 # Fonction (threadee) de notification
 def update_state(mqttClient, heatzy_devices):
@@ -51,7 +52,9 @@ def main():
     parser.add_argument('-u', '--username', help="Username on the Heatzy (Gizwits) platform")
     parser.add_argument('-p', '--password', help="Password of the user")
     parser.add_argument('-s', '--server', help="Broker IP or hostname")
-    parser.add_argument('-i', '--port', help="Broker MQTT Port", default=1883)
+    parser.add_argument('-i', '--port', help="Broker MQTT Port (default : 1883)", default=1883)
+    # TODO : Proposer l'édition du topic
+    # parser.add_argument('-t', '--topic', help="Base topic for MQTT broker", default='')
 
     args = parser.parse_args()
 
