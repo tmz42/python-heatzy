@@ -5,7 +5,22 @@ import time
 class HeatzyHandler:
     # Constantes
     API_BASE_URL = "https://euapi.gizwits.com/app"  # URL de base pour l'API Gizwits employée 
-    APPID = "c70a66ff039d41b4a220e198b0fcc8b3"      # APPID Heatzy dans Gizwits
+    APPID = "c70a66ff039d41b4a220e198b0fcc8b3"      # APPID Heatzy dans Gizwits 
+    MODES_DECODE = {
+        'Pilote2' : {'stop' : 'OFF', 'eco' : 'ECO', 'fro' : 'HGEL', 'cft' : 'CONFORT'}, # Modes pour Pilote2
+        'Heatzy' : {'停止' : 'OFF', '经济' : 'ECO', '解冻' : 'HGEL', '舒适' : 'CONFORT'} # Modes pour Pilote Gen 1
+    }
+    MODES_ENCODE = {
+            # Matrice d'encodage des modes pour Heatzy Pilote (Gen 1)
+            'Heatzy' : {'OFF':{'raw':(1,1,3)},'ECO':{'raw':(1,1,1)},'HGEL':{'raw':(1,1,2)},'CONFORT':{'raw':(1,1,0)}},
+            # Matrice d'encodage des modes pour Heatzy Pilote Gen 2
+            'Pilote2' : {
+                'OFF':{'attrs': {'mode':'stop'}},
+                'ECO':{'attrs': {'mode':'eco'}},
+                'HGEL':{'attrs': {'mode':'fro'}},
+                'CONFORT':{'attrs': {'mode':'cft'}}
+                }}
+    MODES_AVAILABLE = ('OFF', 'HGEL',' ECO', 'CONFORT')
 
     # Constructeur
     def __init__(self,login,password):
@@ -80,11 +95,6 @@ class HeatzyDevice:
 
     # Rafraichit l'etat
     def status(self):
-        # Matrice de décodage des modes
-        modes_decode = {
-            'Pilote2' : {'stop' : 'OFF', 'eco' : 'ECO', 'fro' : 'HGEL', 'cft' : 'CONFORT'}, # Modes pour Pilote2
-            'Heatzy' : {'停止' : 'OFF', '经济' : 'ECO', '解冻' : 'HGEL', '舒适' : 'CONFORT'} # Modes pour Pilote Gen 1
-        }
         request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID}
         statusRequest = requests.get(HeatzyHandler.API_BASE_URL+'/devdata/'+self.did+'/latest', headers=request_headers)
 
@@ -92,25 +102,16 @@ class HeatzyDevice:
 
         # TODO : Check for errors here
 
-        self.mode = modes_decode[self.version][mode]
+        self.mode = HeatzyHandler.MODES_DECODE[self.version][mode]
         return self.mode
 
     # Définit le mode à partir du texte
     def setMode(self, mode):
-        # Matrice d'encodage des modes
-        modes_encode = {
-            # Matrice d'encodage des modes pour Heatzy Pilote (Gen 1)
-            'Heatzy' : {'OFF':{'raw':(1,1,3)},'ECO':{'raw':(1,1,1)},'HGEL':{'raw':(1,1,2)},'CONFORT':{'raw':(1,1,0)}},
-            # Matrice d'encodage des modes pour Heatzy Pilote Gen 2
-            'Pilote2' : {
-                'OFF':{'attrs': {'mode':'stop'}},
-                'ECO':{'attrs': {'mode':'eco'}},
-                'HGEL':{'attrs': {'mode':'fro'}},
-                'CONFORT':{'attrs': {'mode':'cft'}}
-                }}
-
+        if mode not in HeatzyHandler.MODES_AVAILABLE:
+            raise Exception('Unavailable mode : '+mode)
+            
         request_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID,'X-Gizwits-User-token': self.handler.get_token()}
-        request_payload = modes_encode[self.version][mode]
+        request_payload = HeatzyHandler.MODES_ENCODE[self.version][mode]
         requests.post(HeatzyHandler.API_BASE_URL+'/control/'+self.did, json=request_payload, headers=request_headers)
         # TODO : check for errors
 
