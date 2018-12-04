@@ -15,7 +15,6 @@ def update_state(mqttClient, heatzy_devices, refresh):
             mqttClient.publish(topicString, heatzy_devices[device].status())
             print(topicString+':'+heatzy_devices[device].mode)
 
-        # TODO : implémenter intervalle de notification personnalisé (argument)
         time.sleep(refresh)
 
 # Fonction de callback de connexion
