@@ -8,14 +8,15 @@ import threading
 import logging
 
 # Fonction (threadee) de notification
-def update_state(mqttClient, heatzy_devices):
+def update_state(mqttClient, heatzy_devices, refresh):
     while True:
         for device in heatzy_devices:
             topicString = 'home/heatzy/'+device+'/state'
             mqttClient.publish(topicString, heatzy_devices[device].status())
             print(topicString+':'+heatzy_devices[device].mode)
 
-        time.sleep(60)
+        # TODO : implémenter intervalle de notification personnalisé (argument)
+        time.sleep(refresh)
 
 # Fonction de callback de connexion
 def on_connect(client, userdata, flags, rc):
@@ -52,11 +53,15 @@ def main():
     parser.add_argument('-u', '--username', help="Username on the Heatzy (Gizwits) platform")
     parser.add_argument('-p', '--password', help="Password of the user")
     parser.add_argument('-s', '--server', help="Broker IP or hostname")
-    parser.add_argument('-i', '--port', help="Broker MQTT Port (default : 1883)", default=1883)
+    parser.add_argument('-i', '--port', help="Broker MQTT Port (default : 1883)", default=1883, type=int)
+    parser.add_argument('-r', '--refresh', help="Refresh rate of the state in seconds (default : updates every 60 seconds)", default=60, type=float)
+    parser.add_argument('-m', '--offmode', help="Sets off mode to this (default = 'ECO')", default='ECO')
     # TODO : Proposer l'édition du topic
     # parser.add_argument('-t', '--topic', help="Base topic for MQTT broker", default='')
 
     args = parser.parse_args()
+
+    # TODO Vérification des arguments:
 
     if args.server and args.password and args.username:
         hh = heatzy.heatzy.HeatzyHandler(args.username, args.password)
@@ -67,9 +72,10 @@ def main():
         mqttClient.connected_flag = False       # On attache les flags de connexion
         mqttClient.bad_connection_flag = False
         mqttClient.heatzy_devices = devicesDict # On attache les devices Heatzy
+        mqttClient.off_mode = args.offmode
 
-        mqttClient.on_connect = on_connect # Callback de on_connect
-        mqttClient.on_message = on_message
+        mqttClient.on_connect = on_connect # Binding du callback de on_connect
+        mqttClient.on_message = on_message # Binding du callback de on_connecth
 
         # Créer ensuite la connexion au broker
         mqttClient.connect(args.server, port=args.port, keepalive=60, bind_address='')
@@ -80,7 +86,7 @@ def main():
             time.sleep(1)
         
         # Démarre le thread de notification...
-        threading.Thread(target=update_state, args=(mqttClient,devicesDict)).start()
+        threading.Thread(target=update_state, args=(mqttClient,devicesDict, args.refresh)).start()
 
         # Boucle en attendant la suite
         mqttClient.loop_forever()
