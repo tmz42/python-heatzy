@@ -19,6 +19,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "requests",],
+        "requests","paho-mqtt"],
     scripts=['bin/heatzy-cli', 'bin/heatzy-mqtt']
 )
