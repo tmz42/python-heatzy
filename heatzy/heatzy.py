@@ -23,7 +23,7 @@ class HeatzyHandler:
                 'HGEL':{'attrs': {'mode':'fro'}},
                 'CONFORT':{'attrs': {'mode':'cft'}}
                 }}
-    MODES_AVAILABLE = ('OFF', 'HGEL',' ECO', 'CONFORT')
+    MODES_AVAILABLE = ('OFF', 'HGEL','ECO', 'CONFORT')
 
     # Constructeur
     def __init__(self,login,password):
@@ -53,7 +53,7 @@ class HeatzyHandler:
             return self.token
 
         else:
-            raise Exception('Erreur de login : '+str(loginRequest.json()))
+            raise Exception('Erreur de login : '+str(loginRequest.json())+ 'user:'+self.login+',pwd:'+self.password)
 
     def devices(self):
         self.getHeatzyDevices()
