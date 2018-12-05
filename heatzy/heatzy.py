@@ -1,6 +1,9 @@
 import requests
 import time
 
+# TODO
+# Disponibilité des devices?
+
 # Handler Heatzy : 'pont', s'authentifie auprès du serveur Gizwits et récupère le token
 class HeatzyHandler:
     # Constantes
@@ -29,7 +32,8 @@ class HeatzyHandler:
         self.token = None           # Initialisation du token
         self.token_expires = None   # Timestamp d'expiration du token
         self.get_token()            # Récupération du token
-        self.devices = None         # Devices Heatzy
+        self.devices_dict = None
+        self.devices_list = None
 
     # Récupération du token
     def get_token(self):
@@ -49,12 +53,16 @@ class HeatzyHandler:
             return self.token
 
         else:
-            raise Exception('Erreur de login : '+loginRequest.json())
+            raise Exception('Erreur de login : '+str(loginRequest.json()))
+
+    def devices(self):
+        self.getHeatzyDevices()
+        return self.devices_list
 
     # Récupère les devices sous forme de 'Dict'
     def getHeatzyDevices(self):     # TODO : ajouter un argument refresh (défaut : false)
         # Si on n'a pas de devices, on fait la requête pour remplir les champs
-        if not self.devices:
+        if not self.devices_list:
             login_headers = {'Accept': 'application/json', 'X-Gizwits-Application-Id': HeatzyHandler.APPID, 'X-Gizwits-User-token' : self.get_token()}
             loginRequest = requests.get(HeatzyHandler.API_BASE_URL+'/bindings', headers=login_headers)
 
@@ -63,15 +71,18 @@ class HeatzyHandler:
             request_devices_list = loginRequest.json()['devices']
             # Initialisation du dictionnaire
             devices_dict = dict()
+            devices_list = list()
 
             # Infos à extraire : device alias, did, product_name
             for device in request_devices_list:
                 dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
                 devices_dict[dev.name] = dev
+                devices_list.append(dev)
 
-            self.devices = devices_dict         # Mise à jour des devices
+            self.devices_dict = devices_dict         # Mise à jour des devices
+            self.devices_list = devices_list
         # Dans tous les cas, on envoie les devices
-        return self.devices
+        return self.devices_dict
 
     # TODO : ajouter méthodes de lookup by name et lookup by DID
 
@@ -92,6 +103,9 @@ class HeatzyDevice:
     def __str__(self):
         str = 'HeatzyDevice : name:'+self.name+',did:'+self.did+',version:'+self.version+',mode:'+self.status()
         return str
+
+    def update(self):
+        self.status()
 
     # Rafraichit l'etat
     def status(self):
@@ -115,7 +129,7 @@ class HeatzyDevice:
         requests.post(HeatzyHandler.API_BASE_URL+'/control/'+self.did, json=request_payload, headers=request_headers)
         # TODO : check for errors
 
-    # Méthodes de définition de modes plus lisilbes
+    # Méthodes de définition de modes plus lisibles
     def confort(self):
         self.setMode('CONFORT')
 

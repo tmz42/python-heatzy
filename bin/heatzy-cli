@@ -4,9 +4,6 @@ import argparse
 import sys
 import time
 
-# Matrice de décodage des modes
-available_modes = ('OFF', 'ECO', 'HGEL', 'CONFORT')
-
 def main():
     parser = argparse.ArgumentParser(description='Controls Heatzy devices throught the CLI')
     parser.add_argument('-u', '--username', help="Username on the Heatzy (Gizwits) platform")
@@ -34,7 +31,7 @@ def main():
         if args.device in deviceList:
             # Si définition du mode : on exécute
             if args.setmode:
-                if args.setmode in available_modes:
+                if args.setmode in heatzy.HeatzyHandler.MODES_AVAILABLE:
                     deviceList[args.device].setMode(args.setmode)
                     time.sleep(2)   # On attend 2 secondes (si on requête directement pas de mise à jour)
                 else:
