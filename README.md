@@ -40,22 +40,13 @@ python heatzy.py -u login@heatzy.com -p p@ssw0rd -l                        # Lis
 python heatzy.py -u login@heatzy.com -p p@ssw0rd -d Bedroom                # Prints the info of the device
 python heatzy.py -u login@heatzy.com -p p@ssw0rd -d Bedroom -m ECO         # Sets the device in the bedroom in ECO mode
 ```
+### HASS Integration
+An optional component is available under opt/homeassistant. Put it in your '<config>/custom_components/climate' directory, and edit your configuration.yaml file.
 
-### MQTT Daemon
-A MQTT Daemon is included to interact remotely with a MQTT-enabled home automation software (this was created with Home Assistant in mind)
-```bash
-python .\heatzy-mqtt
-usage: heatzy-mqtt [-h] [-u USERNAME] [-p PASSWORD] [-s SERVER] [-i PORT]
-
-Controls Heatzy devices throught the CLI
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -u USERNAME, --username USERNAME
-                        Username on the Heatzy (Gizwits) platform
-  -p PASSWORD, --password PASSWORD
-                        Password of the user
-  -s SERVER, --server SERVER
-                        Broker IP or hostname
-  -i PORT, --port PORT  Broker MQTT Port (default : 1883)
-  ```
+```YAML
+# Heatzy
+climate:
+  - platform: heatzy
+    username: 'bidon@bidon.com'
+    password: 'p@ssw0rd'
+```
