@@ -11,12 +11,12 @@ Ce package ne gère (pour l'instant en tout cas) ni la programmation ni les Heat
 ## Usage
 ### Installation
 Vous pouvez l'installer depuis PyPi avec pip :
-```sh
+```console
 $ pip install 
 ```
 
 Vous pouvez également l'installer depuis la source :
-```sh
+```console
 $ git clone https://github.com/tmz42/python-heatzy.git
 $ cd python-heatzy
 $ python setup.py install
@@ -55,7 +55,7 @@ Voici comment l'utiliser :
 ### CLI
 Ce package inclut également un utilitaire ligne de commande pour manipuler les Heatzy.
 
-```sh
+```console
 $ heatzy-cli
 usage: heatzy.py [-h] [-u USERNAME] [-p PASSWORD] [-d DEVICE] [-l]
                  [-m SETMODE]
