@@ -20,5 +20,5 @@ setuptools.setup(
     ],
     install_requires=[
         "requests"],
-    scripts=['bin/heatzy-cli', 'bin/heatzy-mqtt']
+    scripts=['bin/heatzy-cli']
 )
