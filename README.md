@@ -24,7 +24,7 @@ Heatzy (https://heatzy.com/) is a provider of heating control solutions (such as
 >>> device.off()            # Sets mode to 'off'
 >>> device.horsgel()        # Anti-freezing mode
 >>> device.eco()            # Sets 'ECO' mode
->>> device.setMode('ECO')   # Sets 
+>>> device.setMode('ECO')   # Different way to set 'ECO' mode
 
 ```
 ### CLI
