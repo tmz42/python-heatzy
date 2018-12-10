@@ -91,3 +91,5 @@ climate:
     username: 'bidon@bidon.com'
     password: 'p@ssw0rd'
 ```
+
+Ce component intègre vos périphériques heatzy sous forme de device Climate, dont vous pouvez changer l'Operation Mode dans vos scripts et automatisations.
