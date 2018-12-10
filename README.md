@@ -4,22 +4,33 @@ Heatzy (https://heatzy.com/) is a provider of heating control solutions (such as
 ## Usage
 ### Python
 ```python
+>>> import heatzy
 # First create the handler with your heatzy app login/password
-hh = HeatzyHandler('bidon@bidon.fr', 'p@ssw0rd')
+>>> hh = heatzy.HeatzyHandler('bidon@bidon.fr', 'p@ssw0rd')
 
-# Get the devices (HeatzyDevice) associated to your account
-deviceDict = hh.getHeatzyDevices()
+# Get the devices dictionary (containing object type HeatzyDevice) associated to your account. The key is the device name
+>>> deviceDict = hh.getHeatzyDevices()
 
-for device_name in deviceDict:
-    hd = deviceDict[device_name]
-    hd.status()         # Returns the status (OFF, ECO, HGEL, CONFORT)
-    hd.confort()        # Sets the instruction to confort
-    hd.stop()           # Sets to OFF
+# Assigns the device named 'Chambre'
+>>> device = deviceDict['Chambre']  
+# Gets status
+>>> device.status() 
+'ECO'
+### Sets 'confort' mode 
+>>> device.confort()
+# Gets status
+>>> device.status() 
+'CONFORT'
+>>> device.off()            # Sets mode to 'off'
+>>> device.horsgel()        # Anti-freezing mode
+>>> device.eco()            # Sets 'ECO' mode
+>>> device.setMode('ECO')   # Sets 
+
 ```
 ### CLI
 A CLI tool for interacting with the library is included (bin/heatzy-cli)
 ```bash
-python .\heatzy.py
+heatzy-cli
 usage: heatzy.py [-h] [-u USERNAME] [-p PASSWORD] [-d DEVICE] [-l]
                  [-m SETMODE]
 
@@ -36,9 +47,9 @@ optional arguments:
   -l, --list            List all devices
   -m SETMODE, --setmode SETMODE
                         Sets the mode of the device
-python heatzy.py -u login@heatzy.com -p p@ssw0rd -l                        # Lists the devices
-python heatzy.py -u login@heatzy.com -p p@ssw0rd -d Bedroom                # Prints the info of the device
-python heatzy.py -u login@heatzy.com -p p@ssw0rd -d Bedroom -m ECO         # Sets the device in the bedroom in ECO mode
+heatzy-cli -u login@heatzy.com -p p@ssw0rd -l                        # Lists the devices
+heatzy-cli -u login@heatzy.com -p p@ssw0rd -d Bedroom                # Prints the info of the device
+heatzy-cli -u login@heatzy.com -p p@ssw0rd -d Bedroom -m ECO         # Sets the device in the bedroom in ECO mode
 ```
 ### HASS Integration
 An optional component is available under opt/homeassistant. Put it in your '<config>/custom_components/climate' directory, and edit your configuration.yaml file.
