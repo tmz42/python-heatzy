@@ -1,8 +1,12 @@
 # python-heatzy - Python Heatzy controller
 ## heatzy
-Je dispose chez moi de devices Heatzy, qui me permettent de gérer simplement le mode de mon chauffage. A partir de l'API disponible sur Google Drive, j'ai écrit ce package python (disponible également sur PyPi).
+Je dispose chez moi de devices Heatzy, qui me permettent de gérer simplement le mode de mon chauffage. 
 
-Elle ne gère (pour l'instant en tout cas) ni la programmation ni les Heatzy Flam. 
+Utilisant Home Assistant à la maison, je souhaitais les intégrer simplement à ma domotique. 
+
+A partir de l'API disponible sur Google Drive, j'ai donc écrit ce package python (disponible également sur PyPi).
+
+Ce package ne gère (pour l'instant en tout cas) ni la programmation ni les Heatzy Flam. 
 
 ## Usage
 ### Installation
@@ -76,9 +80,10 @@ $ heatzy-cli -u login@heatzy.com -p p@ssw0rd -d Chambre                # Affiche
 HeatzyDevice : name:Chambre,did:didbidonzzzzz,version:Pilote2,mode:OFF
 $ heatzy-cli -u login@heatzy.com -p p@ssw0rd -d Bedroom -m ECO         # Change le mode du heatzy à Chambre
 ```
-### HASS Integration
-An optional component is available under opt/homeassistant. Put it in your '<config>/custom_components/climate' directory, and edit your configuration.yaml file.
+### Intégration Home Assistant
+Dans le sous-répertoire opt/homeassistant, un fichier heatzy.py fournit le composant vous permettant d'intégrer Heatzy à Home Assistant. 
 
+Placez le dans votre répertoire '<config>/custom_components/climate' (créez-le le cas échéant), et éditez votre fichier configuration.yaml :
 ```YAML
 # Heatzy
 climate:
