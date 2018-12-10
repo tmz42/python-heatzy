@@ -1,7 +1,6 @@
 # python-heatzy - Python Heatzy controller
 ## heatzy
-Je dispose chez moi de devices Heatzy, qui me permettent de gérer simplement le mode de mon chauffage. A partir de l'API disponible sur Google Drive, j'ai écrit ce package python (disponible également sur PyPi)
-Heatzy (https://heatzy.com/) is a provider of heating control solutions (such as Pilot Wire addons to radiators). There is an API available on Google Drive, this software was created to control the Pilot Wire solution from a Python library.
+Je dispose chez moi de devices Heatzy, qui me permettent de gérer simplement le mode de mon chauffage. A partir de l'API disponible sur Google Drive, j'ai écrit ce package python (disponible également sur PyPi).
 
 Elle ne gère (pour l'instant en tout cas) ni la programmation ni les Heatzy Flam. 
 
@@ -30,7 +29,7 @@ Voici comment l'utiliser :
 # L'opération de login se fait automatiquement, et génère une exception en cas de crash
 >>> hh = heatzy.HeatzyHandler('bidon@bidon.fr', 'p@ssw0rd')
 
-# Cette ligne récupère tous les devices associés à votre compte
+# Cette ligne récupère tous les devices associés à votre compte sous forme de dictionnaire
 >>> deviceDict = hh.getHeatzyDevices()
 
 # Jouons avec le device nommé Chambre
