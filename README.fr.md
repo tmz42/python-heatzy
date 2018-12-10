@@ -7,12 +7,12 @@ Elle ne gère (pour l'instant en tout cas) ni la programmation ni les Heatzy Fla
 ## Usage
 ### Installation
 Vous pouvez l'installer depuis PyPi avec pip :
-```bash
+```sh
 $ pip install 
 ```
 
 Vous pouvez également l'installer depuis la source :
-```bash
+```sh
 $ git clone https://github.com/tmz42/python-heatzy.git
 $ cd python-heatzy
 $ python setup.py install
@@ -51,7 +51,7 @@ Voici comment l'utiliser :
 ### CLI
 Ce package inclut également un utilitaire ligne de commande pour manipuler les Heatzy.
 
-```bash
+```sh
 $ heatzy-cli
 usage: heatzy.py [-h] [-u USERNAME] [-p PASSWORD] [-d DEVICE] [-l]
                  [-m SETMODE]
