@@ -74,10 +74,15 @@ class HeatzyHandler:
             devices_list = list()
 
             # Infos à extraire : device alias, did, product_name
+            # On ajoute uniquement les devices dont le product_name est supporté (Heatzy, Pilote2)
             for device in request_devices_list:
-                dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
-                devices_dict[dev.name] = dev
-                devices_list.append(dev)
+                if(device['product_name'] in HeatzyHandler.MODES_ENCODE.keys()):
+                    dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
+                    devices_dict[dev.name] = dev
+                    devices_list.append(dev)
+
+                else:
+                    print('Device non supporté: '+device['dev_alias']+', type : '+device['product_name'])
 
             self.devices_dict = devices_dict         # Mise à jour des devices
             self.devices_list = devices_list
