@@ -77,9 +77,13 @@ class HeatzyHandler:
             # On ajoute uniquement les devices dont le product_name est supporté (Heatzy, Pilote2)
             for device in request_devices_list:
                 if(device['product_name'] in HeatzyHandler.MODES_ENCODE.keys()):
-                    dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
-                    devices_dict[dev.name] = dev
-                    devices_list.append(dev)
+                    try:                    
+                        dev = HeatzyDevice(self,name=device['dev_alias'], did=device['did'], version=device['product_name'])
+                        devices_dict[dev.name] = dev
+                        devices_list.append(dev)
+                    # Si device inconnu : pas d'ajout
+                    except KeyError as e:
+                        pass
 
                 else:
                     print('Device non supporté: '+device['dev_alias']+', type : '+device['product_name'])
@@ -119,10 +123,8 @@ class HeatzyDevice:
 
         mode = statusRequest.json()['attr']['mode']
 
-        # TODO : Check for errors here
-
+        # Retourne une KeyError si indisponible (catch dans le constructeur)
         self.mode = HeatzyHandler.MODES_DECODE[self.version][mode]
-        return self.mode
 
     # Définit le mode à partir du texte
     def setMode(self, mode):
