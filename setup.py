@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="heatzy",
-    version="0.0.8",
+    version="0.0.9",
     author="Thomas MONZIE",
     author_email="thomas.monzie@gmail.com",
     description="Controller for Heatzy products",
