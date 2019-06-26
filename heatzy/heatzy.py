@@ -1,7 +1,6 @@
 import requests
 import time
 
-
 # Handler Heatzy : 'pont', s'authentifie auprès du serveur Gizwits et récupère le token
 class HeatzyHandler:
     # Constantes

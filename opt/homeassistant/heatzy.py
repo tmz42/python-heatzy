@@ -10,7 +10,7 @@ from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD
 import homeassistant.helpers.config_validation as cv
 
 # Home Assistant depends on 3rd party packages for API specific code.
-REQUIREMENTS = ['heatzy==0.0.8']
+REQUIREMENTS = ['heatzy==0.0.10']
 
 _LOGGER = logging.getLogger(__name__)
 
