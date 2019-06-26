@@ -1,8 +1,6 @@
 import requests
 import time
 
-# TODO
-# Disponibilité des devices?
 
 # Handler Heatzy : 'pont', s'authentifie auprès du serveur Gizwits et récupère le token
 class HeatzyHandler:
@@ -110,7 +108,7 @@ class HeatzyDevice:
     # Améliorer tostring...
     # ToString
     def __str__(self):
-        str = 'HeatzyDevice : name:'+self.name+',did:'+self.did+',version:'+self.version+',mode:'+self.status()
+        str = 'HeatzyDevice : name:'+self.name+',did:'+self.did+',version:'+self.version+',mode:'+self.mode
         return str
 
     def update(self):
