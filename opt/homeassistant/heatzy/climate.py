@@ -1,4 +1,3 @@
-# Custom Component for heatzy (Put it in <config>/custom_components/climate)
 import logging
 
 import voluptuous as vol
@@ -10,7 +9,7 @@ from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD
 import homeassistant.helpers.config_validation as cv
 
 # Home Assistant depends on 3rd party packages for API specific code.
-REQUIREMENTS = ['heatzy==0.0.11']
+REQUIREMENTS = ['heatzy>=0.0.11']
 
 _LOGGER = logging.getLogger(__name__)
 
