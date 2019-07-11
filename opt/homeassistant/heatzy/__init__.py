@@ -1,0 +1,1 @@
+""" Heatzy component for Home Assistant v0.0.11 """

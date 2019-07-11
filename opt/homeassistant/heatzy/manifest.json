@@ -1,8 +1,8 @@
 {
-    "domain": "heatzy",
-    "name": "Heatzy",
-    "documentation": "https://github.com/tmz42/python-heatzy",
-    "dependencies": [],
-    "codeowners": [],
-    "requirements": ["heatzy>=0.0.11"]
-  }
+  "domain": "heatzy",
+  "name": "Heatzy",
+  "documentation": "https://github.com/tmz42/python-heatzy",
+  "dependencies": [],
+  "codeowners": ["@tmz42"],
+  "requirements": ["heatzy>=0.0.11"]
+}
