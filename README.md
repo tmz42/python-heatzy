@@ -52,7 +52,7 @@ heatzy-cli -u login@heatzy.com -p p@ssw0rd -d Bedroom                # Prints th
 heatzy-cli -u login@heatzy.com -p p@ssw0rd -d Bedroom -m ECO         # Sets the device in the bedroom in ECO mode
 ```
 ### HASS Integration
-An optional component is available under opt/homeassistant. Put it in a '<config>/custom_components/heatzy/climate.py' file, and edit your configuration.yaml file.
+Home Assistant v0.96 broke a lot of stuff climate-wise, and I didn't fix it. The module by @Devotics works great. Nowadays I use his module on my instance, I encourage you to do the same.
 
 ```YAML
 # Heatzy
